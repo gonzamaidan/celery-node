@@ -9,6 +9,7 @@ import { newCeleryBackend, CeleryBackend } from "../backends";
 export default class Base {
   private _backend: CeleryBackend;
   private _broker: CeleryBroker;
+  private _arguments: object;
   conf: CeleryConf;
 
   /**
@@ -17,11 +18,12 @@ export default class Base {
    *
    * @constructor Base
    */
-  constructor(broker: string, backend: string, queue = "celery") {
+  constructor(broker: string, backend: string, queue = "celery", arguments: object) {
     this.conf = defaultConf();
     this.conf.CELERY_BROKER = broker;
     this.conf.CELERY_BACKEND = backend;
     this.conf.CELERY_QUEUE = queue;
+    this._arguments = arguments;
   }
 
   get broker(): CeleryBroker {
@@ -29,7 +31,8 @@ export default class Base {
       this._broker = newCeleryBroker(
         this.conf.CELERY_BROKER,
         this.conf.CELERY_BROKER_OPTIONS,
-        this.conf.CELERY_QUEUE
+        this.conf.CELERY_QUEUE,
+        this._arguments,
       );
     }
     return this._broker;

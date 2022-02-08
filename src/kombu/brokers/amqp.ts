@@ -18,6 +18,7 @@ export default class AMQPBroker implements CeleryBroker {
   connect: Promise<amqplib.Connection>;
   channel: Promise<amqplib.Channel>;
   queue: string;
+  arguments: object = null;
 
   /**
    * AMQP broker class
@@ -25,11 +26,13 @@ export default class AMQPBroker implements CeleryBroker {
    * @param {string} url the connection string of amqp
    * @param {object} opts the options object for amqp connect of amqplib
    * @param {string} queue optional. the queue to connect to.
+   * @param {object} arguments optional. the arguments to pass to the broker.
    */
-  constructor(url: string, opts: object, queue = "celery") {
+  constructor(url: string, opts: object, queue: string = "celery", arguments: object) {
     this.queue = queue;
     this.connect = amqplib.connect(url, opts);
     this.channel = this.connect.then(conn => conn.createChannel());
+    this.arguments = arguments;
   }
 
   /**
@@ -45,14 +48,14 @@ export default class AMQPBroker implements CeleryBroker {
             autoDelete: true,
             internal: false,
             // nowait: false,
-            arguments: null
+            arguments: this.arguments
           }),
           ch.assertQueue(this.queue, {
             durable: true,
             autoDelete: false,
             exclusive: false,
             // nowait: false,
-            arguments: null
+            arguments: this.arguments
           })
         ])
         .then(() => resolve())
@@ -93,7 +96,7 @@ export default class AMQPBroker implements CeleryBroker {
             autoDelete: false,
             exclusive: false,
             // nowait: false,
-            arguments: null
+            arguments: this.arguments
           })
           .then(() => Promise.resolve(ch))
       )
@@ -126,7 +129,7 @@ export default class AMQPBroker implements CeleryBroker {
             autoDelete: false,
             exclusive: false,
             // nowait: false,
-            arguments: null
+            arguments: this.arguments
           })
           .then(() => Promise.resolve(ch))
       )
