@@ -26,13 +26,13 @@ export default class AMQPBroker implements CeleryBroker {
    * @param {string} url the connection string of amqp
    * @param {object} opts the options object for amqp connect of amqplib
    * @param {string} queue optional. the queue to connect to.
-   * @param {object} arguments optional. the arguments to pass to the broker.
+   * @param {object} args optional. the arguments to pass to the broker.
    */
-  constructor(url: string, opts: object, queue: string = "celery", arguments: object) {
+  constructor(url: string, opts: object, queue: string = "celery", args: object) {
     this.queue = queue;
     this.connect = amqplib.connect(url, opts);
     this.channel = this.connect.then(conn => conn.createChannel());
-    this.arguments = arguments;
+    this.arguments = args;
   }
 
   /**

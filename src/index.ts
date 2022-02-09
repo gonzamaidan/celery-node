@@ -11,9 +11,9 @@ export function createClient(
   broker = "amqp://",
   backend = "amqp://",
   queue = "celery",
-  arguments: object = null,
+  opts: object = null,
 ): Client {
-  return new Client(broker, backend, queue, arguments);
+  return new Client(broker, backend, queue, opts);
 }
 
 /**
@@ -25,7 +25,8 @@ export function createClient(
 export function createWorker(
   broker = "amqp://",
   backend = "amqp://",
-  queue = "celery"
+  queue = "celery",
+  opts: object = null,
 ): Worker {
-  return new Worker(broker, backend, queue);
+  return new Worker(broker, backend, queue, opts);
 }

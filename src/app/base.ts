@@ -18,12 +18,12 @@ export default class Base {
    *
    * @constructor Base
    */
-  constructor(broker: string, backend: string, queue = "celery", arguments: object) {
+  constructor(broker: string, backend: string, queue = "celery", opts: object) {
     this.conf = defaultConf();
     this.conf.CELERY_BROKER = broker;
     this.conf.CELERY_BACKEND = backend;
     this.conf.CELERY_QUEUE = queue;
-    this._arguments = arguments;
+    this._arguments = opts;
   }
 
   get broker(): CeleryBroker {
